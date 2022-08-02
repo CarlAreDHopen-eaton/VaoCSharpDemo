@@ -9,13 +9,14 @@ namespace VaoCSharpDemo
       private static bool UseHttps = false;
       private static string Password = "SomePassword";
       private static string User = "SomeUsername";
-      private static string Address = "SomeAddress";
+      private static string Address = "SomeIpAddress";
       private static string Port = "444";
 
       static void Main(string[] args)
       {
          RestResponse response = GetVaoStatus();
          Console.WriteLine(response.Content);
+         Console.WriteLine("Press any key to continue.");
          Console.ReadKey();
       }
 
