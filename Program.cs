@@ -1,4 +1,5 @@
 ﻿using System;
+using CommandLine;
 using RestSharp;
 using RestSharp.Authenticators;
 
@@ -6,16 +7,19 @@ namespace VaoCSharpDemo
 {
    class Program
    {
-      private static bool UseHttps = false;
-      private static string Password = "SomePassword";
-      private static string User = "SomeUsername";
-      private static string Address = "SomeIpAddress";
-      private static string Port = "444";
+      private static ProgramOptions mProgramOptions;
 
       static void Main(string[] args)
       {
+         // Read command line arguments.
+         mProgramOptions = Parser.Default.ParseArguments<ProgramOptions>(args).Value;
+
+         // Query the VMS system.
+         Console.WriteLine($"Checking VMS status (Host:{mProgramOptions.Host}:{mProgramOptions.Port} Secure:{mProgramOptions.UseHttps}).");
          RestResponse response = GetVaoStatus();
          Console.WriteLine(response.Content);
+
+         // Allow user to read output
          Console.WriteLine("Press any key to continue.");
          Console.ReadKey();
       }
@@ -30,9 +34,10 @@ namespace VaoCSharpDemo
 
       private static RestClient GetRestClient()
       {
-         string addressLine = string.Format(@"{0}://{1}:{2}", UseHttps ? "https" : "http", Address, Port);
+         string addressLine = string.Format(@"{0}://{1}:{2}", mProgramOptions.UseHttps ? "https" : "http", mProgramOptions.Host, mProgramOptions.Port);
          RestClient client = new RestClient(addressLine);
-         client.Authenticator = new HttpBasicAuthenticator(User, Password);
+      
+         client.Authenticator = new HttpBasicAuthenticator(mProgramOptions.User, mProgramOptions.Password);
          return client;
       }
    }
