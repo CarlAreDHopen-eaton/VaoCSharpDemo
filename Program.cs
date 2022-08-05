@@ -16,6 +16,9 @@ namespace VaoCSharpDemo
          // Read command line arguments.
          mProgramOptions = Parser.Default.ParseArguments<ProgramOptions>(args).Value;
 
+         if (mProgramOptions == null)
+            return;
+
          // Query the VMS system.
          Console.WriteLine($"Checking VMS status (Host:{mProgramOptions.Host}:{mProgramOptions.Port} Secure:{mProgramOptions.UseHttps}).");
          RestResponse response = GetVaoStatus();
